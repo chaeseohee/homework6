@@ -44,7 +44,7 @@ int main()
 
 	do{
 		printf("----------------------------------------------------------------\n");
-		printf("                     Singly Linked List                         \n");
+		printf("     Singly Linked List [----- [채서희] [2022041084] -----]     \n");
 		printf("----------------------------------------------------------------\n");
 		printf(" Initialize    = z           Print         = p \n");
 		printf(" Insert Node   = i           Delete Node   = d \n");
@@ -168,12 +168,12 @@ int insertNode(headNode *h, int key)
 	while (n != NULL){ 
 		if (n->key >= key){ /* 첫 노드 앞쪽에 삽입해야할 경우 인지 검사 */
 			if (n == h->first){ 
-				h->first = node; //headNode의 first가 node를 가리키게 하고
-				node->link = n; //node의 link에 n의 값을 대입
+				h->first = node; // headNode의 first가 node를 가리키게 하고
+				node->link = n; // node의 link에 n의 값을 대입
 			}
 			else{ /* 중간이거나 마지막인 경우 */
-				node->link = n; //node의 link에 n의 값을 대입하고
-				trail->link = node; //trail이 가리키는 노드의 link가 node를 가리키게 함
+				node->link = n; // node의 link에 n의 값을 대입하고
+				trail->link = node; // trail이 가리키는 노드의 link가 node를 가리키게 함
 			}
 			return 0;
 		}
@@ -181,45 +181,46 @@ int insertNode(headNode *h, int key)
 		n = n->link;
 	}
 	/* 마지막 노드까지 찾지 못한 경우 , 마지막에 삽입 */
-	trail->link = node; //trail이 가리키는노드의 link가 node를 가리키게 함
+	trail->link = node; // trail이 가리키는노드의 link가 node를 가리키게 함
 	return 0;
 }
 
 /**
- * list에 key에 대한 노드하나를 추가
+ * list의 마지막에 key에 대한 노드하나를 추가
  */
 int insertLast(headNode *h, int key)
 {
-	listNode *node = (listNode *)malloc(sizeof(listNode));
-	node->key = key;
-	node->link = NULL;
+	listNode *node = (listNode *)malloc(sizeof(listNode)); // 추가할 노드의 메모리를 할당
+	node->key = key; // 추가할 노드의 멤버 key에 main()에서 입력받은 key값을 대입
+	node->link = NULL; // 추가할 노드의 멤버 link를 NULL로 초기화
 
-	if (h->first == NULL)
-	{
-		h->first = node;
+	if (h->first == NULL){ // headNode의 first가 NULL이면(리스트에 노드가 하나도 없으면)
+		h->first = node; // headNode의 first값에 node값을 대입
 		return 0;
 	}
 
-	listNode *n = h->first;
-	while (n->link != NULL)
-	{
+	listNode *n = h->first; 
+	while (n->link != NULL){ // 마지막 노드로 가서(노드의 link가 NULL일 때까지 다음 link로 이동)
 		n = n->link;
 	}
-	n->link = node;
+	n->link = node; // 마지막 노드의 link값에 node값을 대입(마지막 노드가 추가된 노드를 가리키게 함)
 	return 0;
 }
 
 /**
- * list 처음에 key에 대한 노드하나를 추가
+ * list의 첫번째 노드 삭제
  */
-int insertFirst(headNode *h, int key)
-{
+int deleteFirst(headNode* h) {
 
-	listNode *node = (listNode *)malloc(sizeof(listNode));
-	node->key = key;
+	if (h->first == NULL) // headNode의 first의 값이 NULL이면(리스트에 노드가 없으면)
+	{
+		printf("nothing to delete.\n"); // 리스트에 노드가 없다는 안내문구 출력하고
+		return 0; // 함수 종료
+	}
 
-	node->link = h->first;
-	h->first = node;
+	listNode* n = h->first; // listNode 포인터 n이 첫번째 노드를 가리키게 하고
+	h->first = n->link; // headNode의 first는 두번째노드를 가리키게 함
+	free(n); // 첫번째 노드를 가리키고 있는 listNode포인터를 통해 첫번째 노드 해제
 
 	return 0;
 }
@@ -229,36 +230,30 @@ int insertFirst(headNode *h, int key)
  */
 int deleteNode(headNode *h, int key)
 {
-
-	if (h->first == NULL)
+	if (h->first == NULL) // headNode의 first의 값이 NULL이면(리스트에 노드가 없으면)
 	{
-		printf("nothing to delete.\n");
-		return 0;
+		printf("nothing to delete.\n"); // 리스트에 노드가 없다는 안내문구 출력하고
+		return 0; // 함수 종료
 	}
 
-	listNode *n = h->first;
-	listNode *trail = NULL;
+	listNode *n = h->first; // listNode포인터 n이 첫번째 노드를 가리키게 하고
+	listNode *trail = NULL; // listNode포인터 trail은 아무것도 가리키지 않게 함
 
 	/* key를 기준으로 삽입할 위치를 찾는다 */
-	while (n != NULL)
-	{
-		if (n->key == key)
-		{
-			/* 첫 노드 앞쪽에 삽입해야할 경우 인지 검사 */
-			if (n == h->first)
-			{
-				h->first = n->link;
+	while (n != NULL){ 
+		if (n->key == key){ // n이 가리키는 노드의 key값이 삭제할 key값과 같으면 
+			/* 첫 노드를 삭제해야할 경우 인지 검사 */
+			if (n == h->first){ // 첫번째 노드를 삭제할 경우 
+				h->first = n->link; //headNode의 first값을 첫번째 노드가 가리키고 있는 곳의 주소로 바꿈
+			} 
+			else { /* 중간인 경우거나 마지막인 경우 */
+				trail->link = n->link; //n이 가리키고 있는 노드의 이전노드의 link를(trail의 link를) n이 가리키고 있는 노드의 다음 노드로 바꿈
 			}
-			else
-			{ /* 중간인 경우거나 마지막인 경우 */
-				trail->link = n->link;
-			}
-			free(n);
+			free(n); //n이 가리키고 있는 노드의 메모리 해제
 			return 0;
 		}
-
-		trail = n;
-		n = n->link;
+		trail = n; // trail에는 n의 값을 대입하고
+		n = n->link; // n은 현재가리키고 있는 노드 뒤의 노드를 가리키게 함
 	}
 
 	/* 찾지 못 한경우 */
@@ -271,52 +266,31 @@ int deleteNode(headNode *h, int key)
  */
 int deleteLast(headNode *h)
 {
-
-	if (h->first == NULL)
+	if (h->first == NULL) // headNode의 first의 값이 NULL이면(리스트에 노드가 없으면)
 	{
-		printf("nothing to delete.\n");
-		return 0;
+		printf("nothing to delete.\n"); // 리스트에 노드가 없다는 안내문구 출력하고
+		return 0; // 함수 종료
 	}
 
-	listNode *n = h->first;
-	listNode *trail = NULL;
+	listNode *n = h->first; // listNode포인터 n이 첫번째 노드를 가리키게 하고
+	listNode *trail = NULL; // listNode포인터 trail은 아무것도 가리키지 않게 함
 
 	/* 노드가 하나만 있는 경우, 즉 first node == last node인  경우 처리 */
-	if (n->link == NULL)
-	{
-		h->first = NULL;
-		free(n);
+	if (n->link == NULL){ // 첫번째 노드의 link값이 NULL이면
+		h->first = NULL; // headNode의 first값을 NULL로 바꾸고
+		free(n); // 첫번째 노드의 메모리를 해제
 		return 0;
 	}
 
 	/* 마지막 노드까지 이동 */
-	while (n->link != NULL)
-	{
-		trail = n;
-		n = n->link;
+	while (n->link != NULL){ // n이 가리키는 노드의 link값이 NULL일 때까지
+		trail = n; // trail에는 n의 값을 대입
+		n = n->link; // n에는 n이 가리키고 있는 노드의 다음 노드의 link값을 대입
 	}
 
 	/* n이 삭제되므로, 이전 노드의 링크 NULL 처리 */
-	trail->link = NULL;
-	free(n);
-
-	return 0;
-}
-/**
- * list의 첫번째 노드 삭제
- */
-int deleteFirst(headNode *h)
-{
-
-	if (h->first == NULL)
-	{
-		printf("nothing to delete.\n");
-		return 0;
-	}
-	listNode *n = h->first;
-
-	h->first = n->link;
-	free(n);
+	trail->link = NULL; // n이전의 노드의 link에 NULL대입
+	free(n); //n이 가리키고 있는 노드의 메모리 해제
 
 	return 0;
 }
@@ -326,26 +300,23 @@ int deleteFirst(headNode *h)
  */
 int invertList(headNode *h)
 {
-
-	if (h->first == NULL)
-	{
-		printf("nothing to invert...\n");
-		return 0;
+	if (h->first == NULL) // headNode의 first의 값이 NULL이면(리스트에 노드가 없으면)
+	{ 
+		printf("nothing to invert...\n"); // 리스트에 노드가 없다는 안내문구 출력하고
+		return 0; // 함수 종료
 	}
-	listNode *n = h->first;
-	listNode *trail = NULL;
-	listNode *middle = NULL;
+	listNode *n = h->first; // listNode포인터 n이 첫번째 노드를 가리키게 하고
+	listNode *trail = NULL; // listNode포인터 trail은 NULL로 초기화
+	listNode *middle = NULL; // listNode포인터 middle도 NULL로 초기화
 
-	while (n != NULL)
-	{
-		trail = middle;
-		middle = n;
-		n = n->link;
-		middle->link = trail;
+	while (n != NULL){ // n이 가리키는 노드가 마지막노드일 때까지
+		trail = middle; // trail에는 middle값 대입
+ 		middle = n; // middle에는 n값 대입
+		n = n->link; // n에는 다음 노드의 주소 대입
+		middle->link = trail; // middle이 가리키고 있는 노드의 link값에는 trail값 대입 
 	}
 
-	h->first = middle;
-
+	h->first = middle; // 헤드노드의 first값에는 middle값 대입
 	return 0;
 }
 
@@ -356,20 +327,18 @@ void printList(headNode *h)
 
 	printf("\n---PRINT\n");
 
-	if (h == NULL)
-	{
+	if (h == NULL){  
 		printf("Nothing to print....\n");
 		return;
 	}
 
-	p = h->first;
+	p = h->first; // p가 첫번째 노드를 가리키게 하고
 
-	while (p != NULL)
-	{
-		printf("[ [%d]=%d ] ", i, p->key);
-		p = p->link;
-		i++;
+	while (p != NULL){ // p가 마지막 노드를 가리킬 때까지
+		printf("[ [%d]=%d ] ", i, p->key); // 노드의 순번과 key값을 출력
+		p = p->link; // p가 다음 노드를 가리키게 하고
+		i++; // 몇 번째 노드인지 나타내는 변수 i도 1증가시켜줌
 	}
 
-	printf("  items = %d\n", i);
+	printf("  items = %d\n", i); // 노드의 개수를 출력
 }
